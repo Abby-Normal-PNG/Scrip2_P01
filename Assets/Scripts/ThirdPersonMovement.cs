@@ -17,16 +17,21 @@ public class ThirdPersonMovement : MonoBehaviour
     [Header("Movement")]
     [SerializeField] float _turnSmoothTime = 0.1f;
     [SerializeField] float _moveSpeed = 6f;
+    [SerializeField] float _sprintSpeed = 45f;
     [SerializeField] float _jumpSpeed = 10f;
     [SerializeField] float _gravity = 9.8f;
+    [SerializeField] float _vertSpeedCap = 60f;
 
     Vector3 _directionToMove;
     float _turnSmoothVelocity;
     [SerializeField] float _vertSpeed = 0;
     [SerializeField] bool _isGrounded = false;
     [SerializeField] bool _justJumped = false;
-   
-
+    [SerializeField] bool _isSprinting = false;
+    
+    public bool IsGrounded { get { return _isGrounded; } }
+    public bool IsSprinting { set { _isSprinting = value; } }
+    
     private void OnEnable()
     {
         _groundDetector.GroundDetected += OnGroundDetected;
@@ -57,7 +62,14 @@ public class ThirdPersonMovement : MonoBehaviour
                 ref _turnSmoothVelocity, _turnSmoothTime);
         transform.rotation = Quaternion.Euler(0, _angle, 0);
         Vector3 _moveDirection = Quaternion.Euler(0, _targetAngle, 0) * Vector3.forward;
-        _controller.Move(_moveDirection.normalized * _moveSpeed * Time.deltaTime);
+        if(_isSprinting == false)
+        {
+            _controller.Move(_moveDirection.normalized * _moveSpeed * Time.deltaTime);
+        }
+        else
+        {
+            _controller.Move(_moveDirection.normalized * _sprintSpeed * Time.deltaTime);
+        }
     }
 
     private void ApplyGravity()
@@ -70,6 +82,7 @@ public class ThirdPersonMovement : MonoBehaviour
 
     private void VertMovement()
     {
+            _vertSpeed = Mathf.Clamp(_vertSpeed, -1 * _vertSpeedCap, _vertSpeedCap);
         _controller.Move(Vector3.up * _vertSpeed * Time.deltaTime);
     }
 

@@ -7,22 +7,14 @@ public class ThirdPersonInput : MonoBehaviour
 {
     public event Action Idle = delegate { };
     public event Action StartRunning = delegate { };
+    public event Action StartSprinting = delegate { };
 
     [SerializeField] ThirdPersonMovement _movement = null;
 
     bool _isMoving = false;
+    bool _isSprinting = false;
     private float _horizontal, _vertical;
     private Vector3 _direction;
-
-    private void OnEnable()
-    {
-        _movement.Landed += OnLanded;
-    }
-
-    private void OnDisable()
-    {
-        _movement.Landed += OnLanded;
-    }
 
     private void Start()
     {
@@ -48,14 +40,36 @@ public class ThirdPersonInput : MonoBehaviour
         _horizontal = Input.GetAxisRaw("Horizontal");
         _vertical = Input.GetAxisRaw("Vertical");
         _direction = new Vector3(_horizontal, 0, _vertical).normalized;
+
+        if (Input.GetKeyDown(KeyCode.Space)){
+            _movement.PrepareJump();
+        }
+
+        if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift))
+        {
+            OnSprintPress();
+        }
+
+        if (Input.GetKeyUp(KeyCode.LeftShift) || Input.GetKeyUp(KeyCode.RightShift))
+        {
+            OnSprintRelease();
+        }
     }
 
     private void CheckIfStartedMoving()
     {
         if (_isMoving == false)
         {
-            StartRunning?.Invoke();
-            Debug.Log("Started Running");
+            if (_isSprinting)
+            {
+                StartSprinting?.Invoke();
+                Debug.Log("Started Sprinting");
+            }
+            else
+            {
+                StartRunning?.Invoke();
+                Debug.Log("Started Running");
+            }
         }
         _isMoving = true;
     }
@@ -70,18 +84,50 @@ public class ThirdPersonInput : MonoBehaviour
         _isMoving = false;
     }
 
-    private void OnLanded()
+    public void RecheckRunSprintIdle()
     {
-        if (_isMoving)
+        if (_movement.IsGrounded)
         {
-            StartRunning?.Invoke();
-            Debug.Log("Land & Run");
-        }
-        else
-        {
-            Idle?.Invoke();
-            Debug.Log("Land & Idle");
+            if (_isMoving)
+            {
+                if (_isSprinting)
+                {
+                    StartSprinting?.Invoke();
+                    Debug.Log("Land & Sprint");
+                }
+                else
+                {
+                    StartRunning?.Invoke();
+                    Debug.Log("Land & Run");
+                }
+            }
+            else
+            {
+                Idle?.Invoke();
+                Debug.Log("Land & Idle");
+            }
         }
     }
 
+    private void OnSprintPress()
+    {
+        _isSprinting = true;
+        _movement.IsSprinting = true;
+        if (_isMoving)
+        {
+            StartSprinting?.Invoke();
+            Debug.Log("Started Sprinting");
+        }
+    }
+
+    private void OnSprintRelease()
+    {
+        _isSprinting = false;
+        _movement.IsSprinting = false;
+        if (_isMoving)
+        {
+            StartRunning?.Invoke();
+            Debug.Log("Started Running");
+        }
+    }
 }
