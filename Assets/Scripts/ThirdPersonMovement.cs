@@ -1,24 +1,40 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class ThirdPersonMovement : MonoBehaviour
 {
+    public event Action Idle = delegate { };
+    public event Action StartRunning = delegate { };
+
     [SerializeField] CharacterController _controller;
     [SerializeField] Transform _camTransform;
     [SerializeField] float _speed = 6f;
     [SerializeField] float _turnSmoothTime = 0.1f;
-    [SerializeField] float _turnSmoothVelocity;
+    
+    float _turnSmoothVelocity;
+    bool _isMoving = false;
 
     private float _horizontal, _vertical;
     private Vector3 _direction;
+
+    private void Start()
+    {
+        Idle?.Invoke();
+    }
 
     private void Update()
     {
         ProcessInput();
         if (_direction.magnitude >= 0.1f)
         {
+            CheckIfStartedMoving();
             TurnAndMove();
+        }
+        else
+        {
+            CheckIfStoppedMoving();
         }
     }
 
@@ -27,6 +43,26 @@ public class ThirdPersonMovement : MonoBehaviour
         _horizontal = Input.GetAxisRaw("Horizontal");
         _vertical = Input.GetAxisRaw("Vertical");
         _direction = new Vector3(_horizontal, 0, _vertical).normalized;
+    }
+
+    private void CheckIfStartedMoving()
+    {
+        if (_isMoving == false)
+        {
+            StartRunning?.Invoke();
+            Debug.Log("Started Running");
+        }
+        _isMoving = true;
+    }
+
+    private void CheckIfStoppedMoving()
+    {
+        if (_isMoving == true)
+        {
+            Idle?.Invoke();
+            Debug.Log("Stopped Running");
+        }
+        _isMoving = false;
     }
 
     private void TurnAndMove()
