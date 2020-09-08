@@ -5,11 +5,12 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class PlayerCharacterAnimator : MonoBehaviour
 {
+    [SerializeField] ThirdPersonInput _thirdPersonInput = null;
     [SerializeField] ThirdPersonMovement _thirdPersonMovement = null;
     const string IdleState = "Idle";
     const string RunState = "Run";
     const string JumpState = "Jump";
-    const string FallState = "Fall";
+    const string FallState = "Falling";
 
     Animator _animator = null;
 
@@ -20,14 +21,18 @@ public class PlayerCharacterAnimator : MonoBehaviour
 
     private void OnEnable()
     {
-        _thirdPersonMovement.Idle += OnIdle;
-        _thirdPersonMovement.StartRunning += OnStartRunning;
+        _thirdPersonInput.Idle += OnIdle;
+        _thirdPersonInput.StartRunning += OnStartRunning;
+        _thirdPersonMovement.Jumped += OnJumped;
+        _thirdPersonMovement.Fell += OnFell;
     }
 
     private void OnDisable()
     {
-        _thirdPersonMovement.Idle -= OnIdle;
-        _thirdPersonMovement.StartRunning -= OnStartRunning;
+        _thirdPersonInput.Idle -= OnIdle;
+        _thirdPersonInput.StartRunning -= OnStartRunning;
+        _thirdPersonMovement.Jumped -= OnJumped;
+        _thirdPersonMovement.Fell -= OnFell;
     }
 
     private void OnIdle()
@@ -39,4 +44,15 @@ public class PlayerCharacterAnimator : MonoBehaviour
     {
         _animator.CrossFadeInFixedTime(RunState, .2f);
     }
+
+    private void OnJumped()
+    {
+        _animator.CrossFadeInFixedTime(JumpState, .2f);
+    }
+
+    private void OnFell()
+    {
+        _animator.CrossFadeInFixedTime(FallState, .2f);
+    }
+
 }
