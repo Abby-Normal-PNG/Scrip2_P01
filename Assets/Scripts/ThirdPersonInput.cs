@@ -10,6 +10,10 @@ public class ThirdPersonInput : MonoBehaviour
     public event Action StartSprinting = delegate { };
 
     [SerializeField] ThirdPersonMovement _movement = null;
+    [SerializeField] KeyCode _jumpKey1 = KeyCode.Space;
+    [SerializeField] KeyCode _jumpKey2 = KeyCode.Return;
+    [SerializeField] KeyCode _sprintKey1 = KeyCode.LeftShift;
+    [SerializeField] KeyCode _sprintKey2 = KeyCode.RightShift;
 
     bool _isMoving = false;
     bool _isSprinting = false;
@@ -41,16 +45,16 @@ public class ThirdPersonInput : MonoBehaviour
         _vertical = Input.GetAxisRaw("Vertical");
         _direction = new Vector3(_horizontal, 0, _vertical).normalized;
 
-        if (Input.GetKeyDown(KeyCode.Space)){
+        if (Input.GetKeyDown(_jumpKey1) || Input.GetKeyDown(_jumpKey2)){
             _movement.PrepareJump();
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift))
+        if (Input.GetKeyDown(_sprintKey1) || Input.GetKeyDown(_sprintKey2))
         {
             OnSprintPress();
         }
 
-        if (Input.GetKeyUp(KeyCode.LeftShift) || Input.GetKeyUp(KeyCode.RightShift))
+        if (Input.GetKeyUp(_sprintKey1) || Input.GetKeyUp(_sprintKey2))
         {
             OnSprintRelease();
         }
