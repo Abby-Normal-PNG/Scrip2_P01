@@ -14,8 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _abilityName: Kick
   _abilitySprite: {fileID: 21300000, guid: 7124fc120b8189749be952c40605e19e, type: 3}
-  _abilityClip: {fileID: 8300000, guid: a85aeccb0421e694cabb047242823c79, type: 3}
-  _abilityBaseCooldown: 0.5
+  _abilityClip: {fileID: 8300000, guid: fcd6ab4ed4080e146a874173490cf203, type: 3}
+  _abilityBaseCooldown: 2
   _meleeDamage: 3
-  _meleeRange: 50
-  _hitForce: 1000
+  _meleeRange: 10
+  _hitForce: 800
+  _successEffects: {fileID: 4336449873102870839, guid: 3657d821604ac0e49b93d314246ed73f, type: 3}
+  _successClip: {fileID: 8300000, guid: 2ffa7cb24e929164993cda947457f3dc, type: 3}
+  _hitEffectTimeSecs: 0.5
