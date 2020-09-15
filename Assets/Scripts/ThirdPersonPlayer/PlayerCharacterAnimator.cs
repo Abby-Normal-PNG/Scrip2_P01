@@ -14,9 +14,10 @@ public class PlayerCharacterAnimator : MonoBehaviour
     const string FallState = "Falling";
     const string LandState = "Land";
     const string SprintState = "Sprint";
-    const string AbilityState = "Jump";
+    const string AbilityState = "Kick";
 
     Animator _animator = null;
+    Coroutine _jumpCoroutine = null;
     Coroutine _landCoroutine = null;
     Coroutine _abilityCoroutine = null;
 
@@ -67,7 +68,8 @@ public class PlayerCharacterAnimator : MonoBehaviour
 
     private void OnJumped()
     {
-        _animator.CrossFadeInFixedTime(JumpState, .2f);
+        CancelCoroutines();
+        _jumpCoroutine = StartCoroutine(JumpCoroutine(.5f));
     }
 
     private void OnFell()
@@ -84,12 +86,16 @@ public class PlayerCharacterAnimator : MonoBehaviour
     private void OnAbilityActivated()
     {
         CancelCoroutines();
-        _abilityCoroutine = StartCoroutine(AbilityCoroutine(.2f));
+        _abilityCoroutine = StartCoroutine(AbilityCoroutine(1f));
     }
 
     private void CancelCoroutines()
     {
-        if(_landCoroutine != null)
+        if (_jumpCoroutine != null)
+        {
+            StopCoroutine(_jumpCoroutine);
+        }
+        if (_landCoroutine != null)
         {
             StopCoroutine(_landCoroutine);
         }
@@ -99,16 +105,23 @@ public class PlayerCharacterAnimator : MonoBehaviour
         }
     }
 
+    IEnumerator JumpCoroutine(float _jumpingTimeInSeconds)
+    {
+        _animator.CrossFadeInFixedTime(LandState, .1f);
+        yield return new WaitForSeconds(_jumpingTimeInSeconds);
+        OnFell();
+    }
+
     IEnumerator LandCoroutine(float _landingTimeInSeconds)
     {
-        _animator.CrossFadeInFixedTime(LandState, _landingTimeInSeconds);
+        _animator.CrossFadeInFixedTime(LandState, .1f);
         yield return new WaitForSeconds(_landingTimeInSeconds);
         _thirdPersonInput.RecheckRunSprintIdle();
     }
 
     IEnumerator AbilityCoroutine(float _abilityTimeInSeconds)
     {
-        _animator.CrossFadeInFixedTime(AbilityState, _abilityTimeInSeconds);
+        _animator.CrossFadeInFixedTime(AbilityState, .1f);
         yield return new WaitForSeconds(_abilityTimeInSeconds);
         _thirdPersonInput.RecheckRunSprintIdle();
     }

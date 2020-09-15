@@ -141,6 +141,7 @@ public class ThirdPersonMovement : MonoBehaviour
         }
         else if (_isGrounded == true)
         {
+            _vertSpeed = 0;
             Fell.Invoke();
             _isGrounded = false;
             Debug.Log("Fell");
