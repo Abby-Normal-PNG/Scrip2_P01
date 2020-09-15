@@ -7,15 +7,18 @@ public class PlayerCharacterAnimator : MonoBehaviour
 {
     [SerializeField] ThirdPersonInput _thirdPersonInput = null;
     [SerializeField] ThirdPersonMovement _thirdPersonMovement = null;
+    [SerializeField] AbilityCooldown _ability = null;
     const string IdleState = "Idle";
     const string RunState = "Run";
     const string JumpState = "Jump";
     const string FallState = "Falling";
     const string LandState = "Land";
     const string SprintState = "Sprint";
+    const string AbilityState = "Jump";
 
     Animator _animator = null;
     Coroutine _landCoroutine = null;
+    Coroutine _abilityCoroutine = null;
 
     private void Awake()
     {
@@ -32,6 +35,8 @@ public class PlayerCharacterAnimator : MonoBehaviour
         _thirdPersonMovement.Jumped += OnJumped;
         _thirdPersonMovement.Fell += OnFell;
         _thirdPersonMovement.Landed += OnLanded;
+        //Setting ability animation
+        _ability.AbilityActivated += OnAbilityActivated;
     }
 
     private void OnDisable()
@@ -42,6 +47,7 @@ public class PlayerCharacterAnimator : MonoBehaviour
         _thirdPersonMovement.Jumped -= OnJumped;
         _thirdPersonMovement.Fell -= OnFell;
         _thirdPersonMovement.Landed -= OnLanded;
+        _ability.AbilityActivated -= OnAbilityActivated;
     }
 
     private void OnIdle()
@@ -61,25 +67,49 @@ public class PlayerCharacterAnimator : MonoBehaviour
 
     private void OnJumped()
     {
-        StopCoroutine(_landCoroutine);
         _animator.CrossFadeInFixedTime(JumpState, .2f);
     }
 
     private void OnFell()
     {
-        StopCoroutine(_landCoroutine);
         _animator.CrossFadeInFixedTime(FallState, .2f);
     }
 
     private void OnLanded()
     {
+        CancelCoroutines();
         _landCoroutine = StartCoroutine(LandCoroutine(.1f));
+    }
+
+    private void OnAbilityActivated()
+    {
+        CancelCoroutines();
+        _abilityCoroutine = StartCoroutine(AbilityCoroutine(.2f));
+    }
+
+    private void CancelCoroutines()
+    {
+        if(_landCoroutine != null)
+        {
+            StopCoroutine(_landCoroutine);
+        }
+        if (_abilityCoroutine != null)
+        {
+            StopCoroutine(_abilityCoroutine);
+        }
     }
 
     IEnumerator LandCoroutine(float _landingTimeInSeconds)
     {
         _animator.CrossFadeInFixedTime(LandState, _landingTimeInSeconds);
         yield return new WaitForSeconds(_landingTimeInSeconds);
+        _thirdPersonInput.RecheckRunSprintIdle();
+    }
+
+    IEnumerator AbilityCoroutine(float _abilityTimeInSeconds)
+    {
+        _animator.CrossFadeInFixedTime(AbilityState, _abilityTimeInSeconds);
+        yield return new WaitForSeconds(_abilityTimeInSeconds);
         _thirdPersonInput.RecheckRunSprintIdle();
     }
 

@@ -9,12 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a3d8730de0f7a4468659f80dc8e8abe, type: 3}
-  m_Name: TestProjectile
+  m_Script: {fileID: 11500000, guid: 4dc19266e35ed2d4e93753d3227c5614, type: 3}
+  m_Name: TestRaycast
   m_EditorClassIdentifier: 
-  _abilityName: TestProjectile
+  _abilityName: Test Raycast
   _abilitySprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
   _abilityClip: {fileID: 8300000, guid: a85aeccb0421e694cabb047242823c79, type: 3}
-  _abilityBaseCooldown: 3
-  projectileForce: 1000
-  projectile: {fileID: 5206214975719132790, guid: ba2f0fad19c8d0a4388dbfd83d3721e7, type: 3}
+  _abilityBaseCooldown: 2
+  _gunDamage: 1
+  _weaponRange: 50
+  _hitForce: 100
+  _laserColor: {r: 0.6509434, g: 0.08351728, b: 0.6213014, a: 0.6784314}

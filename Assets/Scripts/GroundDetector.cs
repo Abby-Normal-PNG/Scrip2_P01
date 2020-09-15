@@ -11,6 +11,7 @@ public class GroundDetector : MonoBehaviour
     [SerializeField] float _detectLength = 0.25f;
     [SerializeField] LayerMask _groundLayer = 0;
 
+    private bool _isGrounded = false;
     RaycastHit _hit;
 
     private void Update()
@@ -22,11 +23,30 @@ public class GroundDetector : MonoBehaviour
     {
         if(Physics.Raycast(transform.position, Vector3.down, _detectLength, _groundLayer))
         {
-            GroundDetected?.Invoke();
+            if(_isGrounded == false)
+            {
+                Debug.Log("Ground Detected");
+                GroundDetected?.Invoke();
+                _isGrounded = true;
+            }
+        }
+        else if (_isGrounded == true)
+        {
+            Debug.Log("GroundVanished");
+            GroundVanished?.Invoke();
+            _isGrounded = false;
+        }
+    }
+
+    public bool CheckGround(float _distance)
+    {
+        if (Physics.Raycast(transform.position, Vector3.down, _distance, _groundLayer))
+        {
+            return true;
         }
         else
         {
-            GroundVanished?.Invoke();
+            return false;
         }
     }
 }

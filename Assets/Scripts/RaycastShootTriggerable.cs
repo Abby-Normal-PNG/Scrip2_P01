@@ -10,7 +10,7 @@ public class RaycastShootTriggerable : MonoBehaviour
     public Transform gunEnd;                                            // Holds a reference to the gun end object, marking the muzzle location of the gun.
     [HideInInspector] public LineRenderer laserLine;                    // Reference to the LineRenderer component which will display our laserline.
 
-    private Camera fpsCam;                                                // Holds a reference to the first person camera.
+    [SerializeField] Camera tpCam;                                                // Holds a reference to the first person camera.
     private WaitForSeconds shotDuration = new WaitForSeconds(.07f);        // WaitForSeconds object used by our ShotEffect coroutine, determines time laser line will remain visible.
 
 
@@ -18,19 +18,16 @@ public class RaycastShootTriggerable : MonoBehaviour
     {
         //Get and store a reference to our LineRenderer component
         laserLine = GetComponent<LineRenderer>();
-
-        //Get and store a reference to our Camera
-        fpsCam = GetComponentInParent<Camera>();
     }
 
     public void Fire()
     {
 
         //Create a vector at the center of our camera's near clip plane.
-        Vector3 rayOrigin = fpsCam.ViewportToWorldPoint(new Vector3(.5f, .5f, 0));
+        Vector3 rayOrigin = tpCam.ViewportToWorldPoint(new Vector3(.5f, .5f, 0));
 
         //Draw a debug line which will show where our ray will eventually be
-        Debug.DrawRay(rayOrigin, fpsCam.transform.forward * weaponRange, Color.green);
+        Debug.DrawRay(rayOrigin, tpCam.transform.forward * weaponRange, Color.green);
 
         //Declare a raycast hit to store information about what our raycast has hit.
         RaycastHit hit;
@@ -42,7 +39,7 @@ public class RaycastShootTriggerable : MonoBehaviour
         laserLine.SetPosition(0, gunEnd.position);
 
         //Check if our raycast has hit anything
-        if (Physics.Raycast(rayOrigin, fpsCam.transform.forward, out hit, weaponRange))
+        if (Physics.Raycast(rayOrigin, tpCam.transform.forward, out hit, weaponRange))
         {
             //Set the end position for our laser line 
             laserLine.SetPosition(1, hit.point);
@@ -67,7 +64,7 @@ public class RaycastShootTriggerable : MonoBehaviour
         else
         {
             //if we did not hit anything, set the end of the line to a position directly away from
-            laserLine.SetPosition(1, fpsCam.transform.forward * weaponRange);
+            laserLine.SetPosition(1, tpCam.transform.forward * weaponRange);
         }
     }
 

@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class AbilityCooldown : MonoBehaviour
 {
+    public event Action AbilityActivated = delegate { };
+
     [SerializeField] Ability _ability;
     [SerializeField] GameObject _weaponHolder;
     
@@ -75,5 +78,6 @@ public class AbilityCooldown : MonoBehaviour
         _abilityAudio.clip = _ability._abilityClip;
         _abilityAudio.Play();
         _ability.TriggerAbility();
+        AbilityActivated?.Invoke();
     }
 }

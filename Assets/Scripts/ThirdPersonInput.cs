@@ -46,6 +46,7 @@ public class ThirdPersonInput : MonoBehaviour
         _direction = new Vector3(_horizontal, 0, _vertical).normalized;
 
         if (Input.GetKeyDown(_jumpKey1) || Input.GetKeyDown(_jumpKey2)){
+            //Debug.Log("Jump Pressed");
             _movement.PrepareJump();
         }
 
@@ -62,17 +63,17 @@ public class ThirdPersonInput : MonoBehaviour
 
     private void CheckIfStartedMoving()
     {
-        if (_isMoving == false)
+        if (_isMoving == false && _movement.IsGrounded == true)
         {
             if (_isSprinting)
             {
                 StartSprinting?.Invoke();
-                Debug.Log("Started Sprinting");
+                //Debug.Log("Started Sprinting");
             }
             else
             {
                 StartRunning?.Invoke();
-                Debug.Log("Started Running");
+                //Debug.Log("Started Running");
             }
         }
         _isMoving = true;
@@ -80,10 +81,10 @@ public class ThirdPersonInput : MonoBehaviour
 
     private void CheckIfStoppedMoving()
     {
-        if (_isMoving == true)
+        if (_isMoving == true && _movement.IsGrounded == true)
         {
             Idle?.Invoke();
-            Debug.Log("Stopped Running");
+            //Debug.Log("Stopped Running");
         }
         _isMoving = false;
     }
@@ -97,18 +98,18 @@ public class ThirdPersonInput : MonoBehaviour
                 if (_isSprinting)
                 {
                     StartSprinting?.Invoke();
-                    Debug.Log("Land & Sprint");
+                    //Debug.Log("Land & Sprint");
                 }
                 else
                 {
                     StartRunning?.Invoke();
-                    Debug.Log("Land & Run");
+                    //Debug.Log("Land & Run");
                 }
             }
             else
             {
                 Idle?.Invoke();
-                Debug.Log("Land & Idle");
+                //Debug.Log("Land & Idle");
             }
         }
     }
@@ -117,10 +118,10 @@ public class ThirdPersonInput : MonoBehaviour
     {
         _isSprinting = true;
         _movement.IsSprinting = true;
-        if (_isMoving)
+        if (_isMoving && _movement.IsGrounded == true)
         {
             StartSprinting?.Invoke();
-            Debug.Log("Started Sprinting");
+            //Debug.Log("Started Sprinting");
         }
     }
 
@@ -128,10 +129,10 @@ public class ThirdPersonInput : MonoBehaviour
     {
         _isSprinting = false;
         _movement.IsSprinting = false;
-        if (_isMoving)
+        if (_isMoving && _movement.IsGrounded == true)
         {
             StartRunning?.Invoke();
-            Debug.Log("Started Running");
+            //Debug.Log("Started Running");
         }
     }
 }

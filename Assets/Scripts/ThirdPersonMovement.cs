@@ -21,6 +21,7 @@ public class ThirdPersonMovement : MonoBehaviour
     [SerializeField] float _jumpSpeed = 10f;
     [SerializeField] float _gravity = 9.8f;
     [SerializeField] float _vertSpeedCap = 60f;
+    [SerializeField] float _inclineTolerance = 1f;
 
     Vector3 _directionToMove;
     float _turnSmoothVelocity;
@@ -62,27 +63,27 @@ public class ThirdPersonMovement : MonoBehaviour
                 ref _turnSmoothVelocity, _turnSmoothTime);
         transform.rotation = Quaternion.Euler(0, _angle, 0);
         Vector3 _moveDirection = Quaternion.Euler(0, _targetAngle, 0) * Vector3.forward;
-        if(_isSprinting == false)
-        {
-            _controller.Move(_moveDirection.normalized * _moveSpeed * Time.deltaTime);
-        }
-        else
+
+        //If sprinting and grounded, use sprint speed
+        if(_isSprinting == true && _isGrounded == true)
         {
             _controller.Move(_moveDirection.normalized * _sprintSpeed * Time.deltaTime);
+        }
+        //If not sprinting or in the air, use normal speed
+        else
+        {
+            _controller.Move(_moveDirection.normalized * _moveSpeed * Time.deltaTime);
         }
     }
 
     private void ApplyGravity()
     {
-        if(_isGrounded == false)
-        {
-            _vertSpeed -= _gravity;
-        }
+        _vertSpeed -= _gravity;
     }
 
     private void VertMovement()
     {
-            _vertSpeed = Mathf.Clamp(_vertSpeed, -1 * _vertSpeedCap, _vertSpeedCap);
+        _vertSpeed = Mathf.Clamp(_vertSpeed, -1 * _vertSpeedCap, _vertSpeedCap);
         _controller.Move(Vector3.up * _vertSpeed * Time.deltaTime);
     }
 
@@ -94,7 +95,8 @@ public class ThirdPersonMovement : MonoBehaviour
     {
         if (_isGrounded)
         {
-            _vertSpeed += _jumpSpeed;
+            _vertSpeed = _jumpSpeed;
+            VertMovement();
             _justJumped = true;
         }
     }
@@ -108,11 +110,11 @@ public class ThirdPersonMovement : MonoBehaviour
             Debug.Log("Landed");
         }
         _isGrounded = true;
+        _justJumped = false;
     }
 
     private void OnGroundVanished()
     {
-        _isGrounded = false;
         CheckIfJustJumped();
     }
 
@@ -121,12 +123,26 @@ public class ThirdPersonMovement : MonoBehaviour
         if (_justJumped)
         {
             Jumped?.Invoke();
+            _isGrounded = false;
             Debug.Log("Jumped");
-            _justJumped = false;
         }
         else
         {
+            CheckForRamp();
+        }
+    }
+
+    private void CheckForRamp()
+    {
+        if (_groundDetector.CheckGround(_inclineTolerance))
+        {
+            ApplyGravity();
+            VertMovement();
+        }
+        else if (_isGrounded == true)
+        {
             Fell.Invoke();
+            _isGrounded = false;
             Debug.Log("Fell");
         }
     }
