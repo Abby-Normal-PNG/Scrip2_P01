@@ -25,14 +25,14 @@ public class GroundDetector : MonoBehaviour
         {
             if(_isGrounded == false)
             {
-                Debug.Log("Ground Detected");
+                //Debug.Log("Ground Detected");
                 GroundDetected?.Invoke();
                 _isGrounded = true;
             }
         }
         else if (_isGrounded == true)
         {
-            Debug.Log("GroundVanished");
+            //Debug.Log("GroundVanished");
             GroundVanished?.Invoke();
             _isGrounded = false;
         }

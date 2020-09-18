@@ -26,15 +26,13 @@ public class MeleeTriggerable : MonoBehaviour
         Vector3 _castOrigin = _meleeOrigin.position;
         Debug.DrawRay(_castOrigin, _meleeOrigin.transform.forward * _meleeRange, Color.green);
         RaycastHit _hit;
-        //StartCoroutine(MeleeEffect());
-        //Check if our raycast has hit anything
         if (Physics.Raycast(_castOrigin, _meleeOrigin.transform.forward, out _hit, _meleeRange))
         {
             _coroutine = StartCoroutine(MeleeHitEffect(_hit));
-            Health _hitHealth = _hit.collider.gameObject.GetComponent<Health>();
+            IDamageable<int> _hitHealth = _hit.collider.gameObject.GetComponent<IDamageable<int>>();
             if (_hitHealth != null)
             {
-                _hitHealth.TakeDamage(_meleeDamage);
+                _hitHealth.Damage(_meleeDamage);
             }
             if (_hit.rigidbody != null)
             {

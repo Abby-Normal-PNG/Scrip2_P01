@@ -1,9 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
-public class EnemyController : MonoBehaviour
+public interface IDamageable<T>
 {
-    
+    void Damage(T _damageTaken);
 }

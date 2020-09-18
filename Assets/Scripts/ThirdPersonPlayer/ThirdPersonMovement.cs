@@ -107,7 +107,7 @@ public class ThirdPersonMovement : MonoBehaviour
         if(_isGrounded == false)
         {
             Landed?.Invoke();
-            Debug.Log("Landed");
+            //Debug.Log("Landed");
         }
         _isGrounded = true;
         _justJumped = false;
@@ -124,7 +124,7 @@ public class ThirdPersonMovement : MonoBehaviour
         {
             Jumped?.Invoke();
             _isGrounded = false;
-            Debug.Log("Jumped");
+            //Debug.Log("Jumped");
         }
         else
         {
@@ -144,7 +144,7 @@ public class ThirdPersonMovement : MonoBehaviour
             _vertSpeed = 0;
             Fell.Invoke();
             _isGrounded = false;
-            Debug.Log("Fell");
+            //Debug.Log("Fell");
         }
     }
 }
