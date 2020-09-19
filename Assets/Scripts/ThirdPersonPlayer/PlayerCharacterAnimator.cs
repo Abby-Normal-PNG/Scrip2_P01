@@ -8,6 +8,8 @@ public class PlayerCharacterAnimator : MonoBehaviour
     [SerializeField] ThirdPersonInput _thirdPersonInput = null;
     [SerializeField] ThirdPersonMovement _thirdPersonMovement = null;
     [SerializeField] AbilityCooldown _ability = null;
+    [SerializeField] PlayerHealth _health = null;
+
     const string IdleState = "Idle";
     const string RunState = "Run";
     const string JumpState = "Jump";
@@ -15,11 +17,13 @@ public class PlayerCharacterAnimator : MonoBehaviour
     const string LandState = "Land";
     const string SprintState = "Sprint";
     const string AbilityState = "Kick";
+    const string DamageState = "Damaged";
+    const string DeadState = "Dying";
 
     Animator _animator = null;
-    Coroutine _jumpCoroutine = null;
-    Coroutine _landCoroutine = null;
-    Coroutine _abilityCoroutine = null;
+    Coroutine _animCoroutine = null;
+
+    private bool _isDamagedOrDying = false;
 
     private void Awake()
     {
@@ -38,6 +42,9 @@ public class PlayerCharacterAnimator : MonoBehaviour
         _thirdPersonMovement.Landed += OnLanded;
         //Setting ability animation
         _ability.AbilityActivated += OnAbilityActivated;
+        //Setting health related animations
+        _health.TookDamage += OnTookDamage;
+        _health.Died += OnDied;
     }
 
     private void OnDisable()
@@ -49,59 +56,90 @@ public class PlayerCharacterAnimator : MonoBehaviour
         _thirdPersonMovement.Fell -= OnFell;
         _thirdPersonMovement.Landed -= OnLanded;
         _ability.AbilityActivated -= OnAbilityActivated;
+        _health.TookDamage -= OnTookDamage;
+        _health.Died -= OnDied;
     }
 
     private void OnIdle()
     {
-        _animator.CrossFadeInFixedTime(IdleState, .2f);
+        if (_isDamagedOrDying == false)
+        {
+            _animator.CrossFadeInFixedTime(IdleState, .2f);
+        }
     }
 
     private void OnStartRunning()
     {
-        _animator.CrossFadeInFixedTime(RunState, .2f);
+        if (_isDamagedOrDying == false)
+        {
+            _animator.CrossFadeInFixedTime(RunState, .2f);
+        }
     }
 
     private void OnStartSprinting()
     {
-        _animator.CrossFadeInFixedTime(SprintState, .2f);
+        if (_isDamagedOrDying == false)
+        {
+            _animator.CrossFadeInFixedTime(SprintState, .2f);
+        }
     }
 
     private void OnJumped()
     {
-        CancelCoroutines();
-        _jumpCoroutine = StartCoroutine(JumpCoroutine(.5f));
+        if (_isDamagedOrDying == false)
+        {
+            CancelCoroutines();
+            _animCoroutine = StartCoroutine(JumpCoroutine(.5f));
+        }
     }
 
     private void OnFell()
     {
-        _animator.CrossFadeInFixedTime(FallState, .2f);
+        if (_isDamagedOrDying == false)
+        {
+            _animator.CrossFadeInFixedTime(FallState, .2f);
+        }
     }
 
     private void OnLanded()
     {
+        if (_isDamagedOrDying == false)
+        {
         CancelCoroutines();
-        _landCoroutine = StartCoroutine(LandCoroutine(.1f));
+        _animCoroutine = StartCoroutine(LandCoroutine(.1f));
+        }
     }
 
     private void OnAbilityActivated()
     {
+        if (_isDamagedOrDying == false)
+        {
+            CancelCoroutines();
+            _animCoroutine = StartCoroutine(AbilityCoroutine(1f));
+        }
+    }
+
+    private void OnTookDamage()
+    {
+        if(_isDamagedOrDying == false)
+        {
+            CancelCoroutines();
+            _animCoroutine = StartCoroutine(DamageCoroutine(1f));
+        }
+    }
+
+    private void OnDied()
+    {
         CancelCoroutines();
-        _abilityCoroutine = StartCoroutine(AbilityCoroutine(1f));
+        _isDamagedOrDying = true;
+        _animator.CrossFadeInFixedTime(DeadState, .2f);
     }
 
     private void CancelCoroutines()
     {
-        if (_jumpCoroutine != null)
+        if (_animCoroutine != null)
         {
-            StopCoroutine(_jumpCoroutine);
-        }
-        if (_landCoroutine != null)
-        {
-            StopCoroutine(_landCoroutine);
-        }
-        if (_abilityCoroutine != null)
-        {
-            StopCoroutine(_abilityCoroutine);
+            StopCoroutine(_animCoroutine);
         }
     }
 
@@ -110,6 +148,7 @@ public class PlayerCharacterAnimator : MonoBehaviour
         _animator.CrossFadeInFixedTime(LandState, .1f);
         yield return new WaitForSeconds(_jumpingTimeInSeconds);
         OnFell();
+        _animCoroutine = null;
     }
 
     IEnumerator LandCoroutine(float _landingTimeInSeconds)
@@ -117,6 +156,7 @@ public class PlayerCharacterAnimator : MonoBehaviour
         _animator.CrossFadeInFixedTime(LandState, .1f);
         yield return new WaitForSeconds(_landingTimeInSeconds);
         _thirdPersonInput.RecheckRunSprintIdle();
+        _animCoroutine = null;
     }
 
     IEnumerator AbilityCoroutine(float _abilityTimeInSeconds)
@@ -124,6 +164,16 @@ public class PlayerCharacterAnimator : MonoBehaviour
         _animator.CrossFadeInFixedTime(AbilityState, .1f);
         yield return new WaitForSeconds(_abilityTimeInSeconds);
         _thirdPersonInput.RecheckRunSprintIdle();
+        _animCoroutine = null;
     }
 
+    IEnumerator DamageCoroutine(float _damagetimeInSeconds)
+    {
+        _isDamagedOrDying = true;
+        _animator.CrossFadeInFixedTime(DamageState, .1f);
+        yield return new WaitForSeconds(_damagetimeInSeconds);
+        _thirdPersonInput.RecheckRunSprintIdle();
+        _animCoroutine = null;
+        _isDamagedOrDying = false;
+    }
 }

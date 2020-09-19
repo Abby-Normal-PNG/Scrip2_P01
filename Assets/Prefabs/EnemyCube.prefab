@@ -280,6 +280,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _damageAmount: 1
+  _knockbackForce: 1
 --- !u!1 &6960656514113964490
 GameObject:
   m_ObjectHideFlags: 0

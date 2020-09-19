@@ -39,6 +39,12 @@ public class ThirdPersonMovement : MonoBehaviour
         _groundDetector.GroundVanished += OnGroundVanished;
     }
 
+    private void OnDisable()
+    {
+        _groundDetector.GroundDetected -= OnGroundDetected;
+        _groundDetector.GroundVanished -= OnGroundVanished;
+    }
+
     private void Start()
     {
         _vertSpeed -= _gravity;
@@ -146,5 +152,11 @@ public class ThirdPersonMovement : MonoBehaviour
             _isGrounded = false;
             //Debug.Log("Fell");
         }
+    }
+
+    public void Knockback(Vector3 _knockbackOrigin, float _knockbackForce)
+    {
+        Vector3 _knockbackMotion = (gameObject.transform.position - _knockbackOrigin) * _knockbackForce;
+        _controller.Move(_knockbackMotion);
     }
 }
