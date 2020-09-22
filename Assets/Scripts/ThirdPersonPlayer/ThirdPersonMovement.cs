@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System;
 
 public class ThirdPersonMovement : MonoBehaviour
@@ -14,6 +15,7 @@ public class ThirdPersonMovement : MonoBehaviour
     [SerializeField] CharacterController _controller = null;
     [SerializeField] Transform _camTransform = null;
     [SerializeField] GroundDetector _groundDetector = null;
+    [SerializeField] CanvasGroup _playerUI = null;
     [Header("Movement")]
     [SerializeField] float _turnSmoothTime = 0.1f;
     [SerializeField] float _moveSpeed = 6f;
@@ -31,7 +33,7 @@ public class ThirdPersonMovement : MonoBehaviour
     [SerializeField] bool _isSprinting = false;
     
     public bool IsGrounded { get { return _isGrounded; } }
-    public bool IsSprinting { set { _isSprinting = value; } }
+    public bool IsSprinting { set { _isSprinting = value; } }   
     
     private void OnEnable()
     {
@@ -49,6 +51,7 @@ public class ThirdPersonMovement : MonoBehaviour
     {
         _vertSpeed -= _gravity;
         VertMovement();
+        OnPlayerControl();
     }
 
     private void FixedUpdate()
@@ -59,6 +62,16 @@ public class ThirdPersonMovement : MonoBehaviour
         }
         ApplyGravity();
         VertMovement();
+    }
+
+    void OnPlayerControl()
+    {
+        _playerUI.alpha = 1;
+    }
+
+    void OnPlayerRelease()
+    {
+        _playerUI.alpha = 0;
     }
 
     private void TurnAndHorzMove()

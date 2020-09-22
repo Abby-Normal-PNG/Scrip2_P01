@@ -16,6 +16,7 @@ public class PlayerHealth : MonoBehaviour, IHealable<int>, IDamageable<int>, IKi
     [Header("Values")]
     [SerializeField] int _currentHealth = 10;
     [SerializeField] int _maxHealth = 10;
+    [SerializeField] Slider _healthSlider = null;
     [Header("Damage")]
     [SerializeField] CanvasGroup _damageCG;
     [SerializeField] float _damageFlashTime = 0.5f;
@@ -31,6 +32,19 @@ public class PlayerHealth : MonoBehaviour, IHealable<int>, IDamageable<int>, IKi
     {
         _input = GetComponent<ThirdPersonInput>();
         _movement = GetComponent<ThirdPersonMovement>();
+        InitializeHPSlider();
+    }
+
+    void InitializeHPSlider()
+    {
+        _healthSlider.maxValue = _maxHealth;
+        _healthSlider.minValue = 0;
+        UpdateHPSlider();
+    }
+
+    void UpdateHPSlider()
+    {
+        _healthSlider.value = _currentHealth;
     }
 
     void Update()
@@ -66,6 +80,7 @@ public class PlayerHealth : MonoBehaviour, IHealable<int>, IDamageable<int>, IKi
 
     private void DamageEffects()
     {
+        UpdateHPSlider();
         _damageCoroutine = StartCoroutine(DamageCoroutine(_damageFlashTime));
     }
 
@@ -80,6 +95,7 @@ public class PlayerHealth : MonoBehaviour, IHealable<int>, IDamageable<int>, IKi
     public void Heal(int _damageHealed)
     {
         _currentHealth += _damageHealed;
+        UpdateHPSlider();
         CapHealth();
     }
 
