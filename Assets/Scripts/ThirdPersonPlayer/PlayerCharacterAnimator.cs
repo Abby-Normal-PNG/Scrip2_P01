@@ -115,7 +115,7 @@ public class PlayerCharacterAnimator : MonoBehaviour
         if (_isDamagedOrDying == false)
         {
             CancelCoroutines();
-            _animCoroutine = StartCoroutine(AbilityCoroutine(1f));
+            _animCoroutine = StartCoroutine(AbilityCoroutine(0.6f));
         }
     }
 
