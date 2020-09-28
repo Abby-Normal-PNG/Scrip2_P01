@@ -10,10 +10,12 @@ public class ThirdPersonInput : MonoBehaviour
     public event Action StartSprinting = delegate { };
 
     [SerializeField] ThirdPersonMovement _movement = null;
+    [SerializeField] AbilitySwap _swap = null;
     [SerializeField] KeyCode _jumpKey1 = KeyCode.Space;
     [SerializeField] KeyCode _jumpKey2 = KeyCode.Return;
     [SerializeField] KeyCode _sprintKey1 = KeyCode.LeftShift;
     [SerializeField] KeyCode _sprintKey2 = KeyCode.RightShift;
+    [SerializeField] KeyCode _abilitySwitchKey = KeyCode.Tab;
 
     bool _isMoving = false;
     bool _isSprinting = false;
@@ -58,6 +60,11 @@ public class ThirdPersonInput : MonoBehaviour
         if (Input.GetKeyUp(_sprintKey1) || Input.GetKeyUp(_sprintKey2))
         {
             OnSprintRelease();
+        }
+
+        if (Input.GetKeyDown(_abilitySwitchKey))
+        {
+            SwitchAbilities();
         }
     }
 
@@ -134,5 +141,10 @@ public class ThirdPersonInput : MonoBehaviour
             StartRunning?.Invoke();
             //Debug.Log("Started Running");
         }
+    }
+
+    private void SwitchAbilities()
+    {
+        _swap.SwitchAbilities();
     }
 }

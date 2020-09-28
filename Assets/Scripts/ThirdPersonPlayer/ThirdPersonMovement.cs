@@ -30,6 +30,7 @@ public class ThirdPersonMovement : MonoBehaviour
     [SerializeField] float _vertSpeed = 0;
     [SerializeField] bool _isGrounded = false;
     [SerializeField] bool _justJumped = false;
+    public bool _superJumped = false;
     [SerializeField] bool _isSprinting = false;
     
     public bool IsGrounded { get { return _isGrounded; } }
@@ -122,12 +123,11 @@ public class ThirdPersonMovement : MonoBehaviour
 
     public void PrepareSuperJump(float superJumpSpeed)
     {
-        if (_isGrounded)
-        {
-            _vertSpeed = superJumpSpeed;
-            VertMovement();
-            _justJumped = true;
-        }
+        _vertSpeed = superJumpSpeed;
+        VertMovement();
+        _superJumped = true;
+        _justJumped = true;
+        Jumped?.Invoke();
     }
 
     private void OnGroundDetected()
@@ -140,6 +140,7 @@ public class ThirdPersonMovement : MonoBehaviour
         }
         _isGrounded = true;
         _justJumped = false;
+        _superJumped = false;
     }
 
     private void OnGroundVanished()

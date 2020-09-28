@@ -10,6 +10,6 @@ public class AbilitySwapCollectible : CollectibleBase
     {
         _weaponHolder = player.GetComponentInChildren<AbilityHolder>().gameObject;
         AbilitySwap swap = player.GetComponent<AbilitySwap>();
-        swap.SwapAbility(_abilityToSwapIn, _weaponHolder);
+        swap.SwapMainAbility(_abilityToSwapIn, _weaponHolder);
     }
 }

@@ -8,7 +8,8 @@ public class PlayerCharacterAnimator : MonoBehaviour
     [Header("References")]
     [SerializeField] ThirdPersonInput _thirdPersonInput = null;
     [SerializeField] ThirdPersonMovement _thirdPersonMovement = null;
-    [SerializeField] AbilityCooldown _ability = null;
+    [SerializeField] AbilityCooldown _mainAbility = null;
+    [SerializeField] AbilityCooldown _secondaryAbility = null;
     [SerializeField] PlayerHealth _health = null;
     [Header("Feedback")] 
     [SerializeField] ParticleSystem _landParticle = null;
@@ -45,7 +46,8 @@ public class PlayerCharacterAnimator : MonoBehaviour
         _thirdPersonMovement.Fell += OnFell;
         _thirdPersonMovement.Landed += OnLanded;
         //Setting ability animation
-        _ability.AbilityActivated += OnAbilityActivated;
+        _mainAbility.AbilityActivated += OnAbilityActivated;
+        _secondaryAbility.AbilityActivated += OnAbilityActivated;
         //Setting health related animations
         _health.TookDamage += OnTookDamage;
         _health.Died += OnDied;
@@ -59,7 +61,8 @@ public class PlayerCharacterAnimator : MonoBehaviour
         _thirdPersonMovement.Jumped -= OnJumped;
         _thirdPersonMovement.Fell -= OnFell;
         _thirdPersonMovement.Landed -= OnLanded;
-        _ability.AbilityActivated -= OnAbilityActivated;
+        _mainAbility.AbilityActivated -= OnAbilityActivated;
+        _secondaryAbility.AbilityActivated -= OnAbilityActivated;
         _health.TookDamage -= OnTookDamage;
         _health.Died -= OnDied;
     }
@@ -116,7 +119,7 @@ public class PlayerCharacterAnimator : MonoBehaviour
 
     private void OnAbilityActivated()
     {
-        if (_isDamagedOrDying == false)
+        if (_isDamagedOrDying == false && _thirdPersonMovement._superJumped == false)
         {
             CancelCoroutines();
             _animCoroutine = StartCoroutine(AbilityCoroutine(0.6f));
