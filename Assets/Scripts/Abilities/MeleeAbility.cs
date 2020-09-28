@@ -15,32 +15,32 @@ public class MeleeAbility : Ability
     [SerializeField] AudioClip _successClip;
     [SerializeField] float _hitEffectTimeSecs = 0.5f;
 
-    private MeleeTriggerable _melee;
+    private MeleeTriggerable _meleeTrigger;
     private ParticleSystem _particle;
     private AudioSource _audio;
 
-    public override void Initialize(GameObject _obj)
+    public override void Initialize(GameObject obj)
     {
-        GameObject _initEffects = Instantiate(_successEffects);
-        _particle = _initEffects.GetComponentInChildren<ParticleSystem>();
-        _audio = _initEffects.GetComponentInChildren<AudioSource>();
-        _melee = _obj.GetComponent<MeleeTriggerable>();
+        GameObject initEffects = Instantiate(_successEffects);
+        _particle = initEffects.GetComponentInChildren<ParticleSystem>();
+        _audio = initEffects.GetComponentInChildren<AudioSource>();
+        _meleeTrigger = obj.GetComponent<MeleeTriggerable>();
 
-        _melee._meleeDamage = _meleeDamage;
-        _melee._meleeRange = _meleeRange;
-        _melee._hitForce = _hitForce;
-        _melee._meleeOrigin = _obj.transform;
+        _meleeTrigger._meleeDamage = _meleeDamage;
+        _meleeTrigger._meleeRange = _meleeRange;
+        _meleeTrigger._hitForce = _hitForce;
+        _meleeTrigger._meleeOrigin = obj.transform;
 
-        _melee._particle = _particle;
-        _melee._audio = _audio;
-        _melee._successClip = _successClip;
-        _melee._hitEffectTime = new WaitForSeconds(_hitEffectTimeSecs);
+        _meleeTrigger._particle = _particle;
+        _meleeTrigger._audio = _audio;
+        _meleeTrigger._successClip = _successClip;
+        _meleeTrigger._hitEffectTime = new WaitForSeconds(_hitEffectTimeSecs);
 
-        _melee.Initialize();
+        _meleeTrigger.Initialize();
     }
 
     public override void TriggerAbility()
     {
-        _melee.MeleeAttack();
+        _meleeTrigger.MeleeAttack();
     }
 }

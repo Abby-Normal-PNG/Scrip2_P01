@@ -23,31 +23,30 @@ public class MeleeTriggerable : MonoBehaviour
 
     public void MeleeAttack()
     {
-        Vector3 _castOrigin = _meleeOrigin.position;
-        Debug.DrawRay(_castOrigin, _meleeOrigin.transform.forward * _meleeRange, Color.green);
-        RaycastHit _hit;
-        if (Physics.Raycast(_castOrigin, _meleeOrigin.transform.forward, out _hit, _meleeRange))
+        Vector3 castOrigin = _meleeOrigin.position;
+        Debug.DrawRay(castOrigin, _meleeOrigin.transform.forward * _meleeRange, Color.green);
+        RaycastHit hit;
+        if (Physics.Raycast(castOrigin, _meleeOrigin.transform.forward, out hit, _meleeRange))
         {
-            _coroutine = StartCoroutine(MeleeHitEffect(_hit));
-            IDamageable<int> _hitHealth = _hit.collider.gameObject.GetComponent<IDamageable<int>>();
-            if (_hitHealth != null)
+            _coroutine = StartCoroutine(MeleeHitEffect(hit));
+            IDamageable<int> hitHealth = hit.collider.gameObject.GetComponent<IDamageable<int>>();
+            if (hitHealth != null)
             {
-                _hitHealth.Damage(_meleeDamage);
+                hitHealth.Damage(_meleeDamage);
             }
-            if (_hit.rigidbody != null)
+            if (hit.rigidbody != null)
             {
-                _hit.rigidbody.AddForce(-_hit.normal * _hitForce);
+                hit.rigidbody.AddForce(-hit.normal * _hitForce);
             }
         }
     }
 
-    private IEnumerator MeleeHitEffect(RaycastHit _hit)
+    private IEnumerator MeleeHitEffect(RaycastHit hit)
     {
-        _audio.Play();
-        _particle.gameObject.transform.position = _hit.point;
+        AudioHelper.PlayClip2D(_successClip, 1f);
+        _particle.gameObject.transform.position = hit.point;
         _particle.Play();
         yield return _hitEffectTime;
-        _audio.Stop();
         _particle.Stop();
     }
 }

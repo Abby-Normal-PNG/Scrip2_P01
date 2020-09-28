@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: affe2b893bcf3b642a35efb5b8283a4f, type: 3}
+  m_Name: Super Jump Ability
+  m_EditorClassIdentifier: 
+  _abilityName: Super Jump
+  _abilitySprite: {fileID: 21300000, guid: 8920a631c5dfd1c4ca9c6e48f53b17f5, type: 3}
+  _abilityClip: {fileID: 8300000, guid: a4955f8d79835474f8e7ebb62bbc5686, type: 3}
+  _abilityBaseCooldown: 3
+  _jumpSpeed: 60
+  _jumpEffects: {fileID: 1329372252915950955, guid: 96a56a2e2cf2ddc44b9f2d8dc4c1b42e, type: 3}

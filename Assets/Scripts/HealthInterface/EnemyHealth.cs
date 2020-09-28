@@ -12,9 +12,9 @@ public class EnemyHealth : MonoBehaviour, IDamageable<int>, IKillable, IHealable
     [SerializeField] int _currentHealth = 10;
     [SerializeField] int _maxHealth = 10;
 
-    public void Damage(int _damageTaken)
+    public void Damage(int damageTaken)
     {
-        _currentHealth -= _damageTaken;
+        _currentHealth -= damageTaken;
         CheckDeath();
     }
 
@@ -30,9 +30,9 @@ public class EnemyHealth : MonoBehaviour, IDamageable<int>, IKillable, IHealable
         }
     }
 
-    public void Heal(int _damageHealed)
+    public void Heal(int damageHealed)
     {
-        _currentHealth += _damageHealed;
+        _currentHealth += damageHealed;
         CapHealth();
         Healed?.Invoke();
     }

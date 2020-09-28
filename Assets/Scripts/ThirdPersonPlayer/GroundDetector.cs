@@ -38,9 +38,9 @@ public class GroundDetector : MonoBehaviour
         }
     }
 
-    public bool CheckGround(float _distance)
+    public bool CheckGround(float distance)
     {
-        if (Physics.Raycast(transform.position, Vector3.down, _distance, _groundLayer))
+        if (Physics.Raycast(transform.position, Vector3.down, distance, _groundLayer))
         {
             return true;
         }

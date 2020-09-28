@@ -8,8 +8,8 @@ public class AbilityCooldown : MonoBehaviour
 {
     public event Action AbilityActivated = delegate { };
 
-    [SerializeField] Ability _ability;
-    [SerializeField] GameObject _weaponHolder;
+    public Ability _ability;
+    public GameObject _weaponHolder;
     
     public string _abilityButtonAxisName = "Fire1";
     public Image _darkMask;
@@ -26,15 +26,15 @@ public class AbilityCooldown : MonoBehaviour
         Initialize(_ability, _weaponHolder);
     }
 
-    public void Initialize(Ability _selectedAbility, GameObject _weaponHolder)
+    public void Initialize(Ability selectedAbility, GameObject weaponHolder)
     {
-        _ability = _selectedAbility;
+        _ability = selectedAbility;
         _buttonImage = GetComponent<Image>();
         _abilityAudio = GetComponent<AudioSource>();
         _buttonImage.sprite = _ability._abilitySprite;
         _darkMask.sprite = _ability._abilitySprite;
         _cooldownDuration = _ability._abilityBaseCooldown;
-        _ability.Initialize(_weaponHolder);
+        _ability.Initialize(weaponHolder);
     }
 
     private void Update()
@@ -63,9 +63,9 @@ public class AbilityCooldown : MonoBehaviour
     private void Cooldown()
     {
         _cooldownTimeLeft -= Time.deltaTime;
-        float _roundedCD = Mathf.Round(_cooldownTimeLeft);
+        float roundedCD = Mathf.Round(_cooldownTimeLeft);
         _darkMask.fillAmount = (_cooldownTimeLeft / _cooldownDuration);
-        _coolDownText.text = _roundedCD.ToString();
+        _coolDownText.text = roundedCD.ToString();
     }
 
     private void ButtonTriggered()

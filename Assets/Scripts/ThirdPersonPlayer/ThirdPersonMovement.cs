@@ -76,22 +76,22 @@ public class ThirdPersonMovement : MonoBehaviour
 
     private void TurnAndHorzMove()
     {
-        float _targetAngle = Mathf.Atan2(_directionToMove.x, _directionToMove.z) * Mathf.Rad2Deg
+        float targetAngle = Mathf.Atan2(_directionToMove.x, _directionToMove.z) * Mathf.Rad2Deg
                     + _camTransform.eulerAngles.y;
-        float _angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetAngle,
+        float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle,
                 ref _turnSmoothVelocity, _turnSmoothTime);
-        transform.rotation = Quaternion.Euler(0, _angle, 0);
-        Vector3 _moveDirection = Quaternion.Euler(0, _targetAngle, 0) * Vector3.forward;
+        transform.rotation = Quaternion.Euler(0, angle, 0);
+        Vector3 moveDirection = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;
 
         //If sprinting and grounded, use sprint speed
         if(_isSprinting == true && _isGrounded == true)
         {
-            _controller.Move(_moveDirection.normalized * _sprintSpeed * Time.deltaTime);
+            _controller.Move(moveDirection.normalized * _sprintSpeed * Time.deltaTime);
         }
         //If not sprinting or in the air, use normal speed
         else
         {
-            _controller.Move(_moveDirection.normalized * _moveSpeed * Time.deltaTime);
+            _controller.Move(moveDirection.normalized * _moveSpeed * Time.deltaTime);
         }
     }
 
@@ -106,15 +106,25 @@ public class ThirdPersonMovement : MonoBehaviour
         _controller.Move(Vector3.up * _vertSpeed * Time.deltaTime);
     }
 
-    public void PrepareToMove(Vector3 _direction)
+    public void PrepareToMove(Vector3 direction)
     {
-        _directionToMove = _direction;
+        _directionToMove = direction;
     }
     public void PrepareJump()
     {
         if (_isGrounded)
         {
             _vertSpeed = _jumpSpeed;
+            VertMovement();
+            _justJumped = true;
+        }
+    }
+
+    public void PrepareSuperJump(float superJumpSpeed)
+    {
+        if (_isGrounded)
+        {
+            _vertSpeed = superJumpSpeed;
             VertMovement();
             _justJumped = true;
         }
@@ -167,9 +177,9 @@ public class ThirdPersonMovement : MonoBehaviour
         }
     }
 
-    public void Knockback(Vector3 _knockbackOrigin, float _knockbackForce)
+    public void Knockback(Vector3 knockbackOrigin, float knockbackForce)
     {
-        Vector3 _knockbackMotion = (gameObject.transform.position - _knockbackOrigin) * _knockbackForce;
+        Vector3 _knockbackMotion = (gameObject.transform.position - knockbackOrigin) * knockbackForce;
         _controller.Move(_knockbackMotion);
     }
 }

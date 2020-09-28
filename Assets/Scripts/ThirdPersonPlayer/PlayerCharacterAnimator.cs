@@ -5,11 +5,14 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class PlayerCharacterAnimator : MonoBehaviour
 {
+    [Header("References")]
     [SerializeField] ThirdPersonInput _thirdPersonInput = null;
     [SerializeField] ThirdPersonMovement _thirdPersonMovement = null;
     [SerializeField] AbilityCooldown _ability = null;
     [SerializeField] PlayerHealth _health = null;
+    [Header("Feedback")] 
     [SerializeField] ParticleSystem _landParticle = null;
+    [SerializeField] AudioClip _hurtClip = null;
 
     const string IdleState = "Idle";
     const string RunState = "Run";
@@ -134,6 +137,7 @@ public class PlayerCharacterAnimator : MonoBehaviour
         CancelCoroutines();
         _isDamagedOrDying = true;
         _animator.CrossFadeInFixedTime(DeadState, .2f);
+        AudioHelper.PlayClip2D(_hurtClip, 1f);
     }
 
     private void CancelCoroutines()
@@ -144,36 +148,37 @@ public class PlayerCharacterAnimator : MonoBehaviour
         }
     }
 
-    IEnumerator JumpCoroutine(float _jumpingTimeInSeconds)
+    IEnumerator JumpCoroutine(float jumpingTimeInSeconds)
     {
         _animator.CrossFadeInFixedTime(LandState, .1f);
-        yield return new WaitForSeconds(_jumpingTimeInSeconds);
+        yield return new WaitForSeconds(jumpingTimeInSeconds);
         OnFell();
         _animCoroutine = null;
     }
 
-    IEnumerator LandCoroutine(float _landingTimeInSeconds)
+    IEnumerator LandCoroutine(float landingTimeInSeconds)
     {
         _animator.CrossFadeInFixedTime(LandState, .1f);
         _landParticle.Play();
-        yield return new WaitForSeconds(_landingTimeInSeconds);
+        yield return new WaitForSeconds(landingTimeInSeconds);
         _thirdPersonInput.RecheckRunSprintIdle();
         _animCoroutine = null;
     }
 
-    IEnumerator AbilityCoroutine(float _abilityTimeInSeconds)
+    IEnumerator AbilityCoroutine(float abilityTimeInSeconds)
     {
         _animator.CrossFadeInFixedTime(AbilityState, .1f);
-        yield return new WaitForSeconds(_abilityTimeInSeconds);
+        yield return new WaitForSeconds(abilityTimeInSeconds);
         _thirdPersonInput.RecheckRunSprintIdle();
         _animCoroutine = null;
     }
 
-    IEnumerator DamageCoroutine(float _damagetimeInSeconds)
+    IEnumerator DamageCoroutine(float damagetimeInSeconds)
     {
         _isDamagedOrDying = true;
         _animator.CrossFadeInFixedTime(DamageState, .1f);
-        yield return new WaitForSeconds(_damagetimeInSeconds);
+        AudioHelper.PlayClip2D(_hurtClip, 1f);
+        yield return new WaitForSeconds(damagetimeInSeconds);
         _thirdPersonInput.RecheckRunSprintIdle();
         _animCoroutine = null;
         _isDamagedOrDying = false;

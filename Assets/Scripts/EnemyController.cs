@@ -36,10 +36,10 @@ public class EnemyController : MonoBehaviour
         StartCoroutine(DamageCoroutine(0.5f));
     }
 
-    IEnumerator DamageCoroutine(float _damageTime)
+    IEnumerator DamageCoroutine(float damageTime)
     {
         _bodyArt.material.color = _damagedColor;
-        yield return new WaitForSeconds(_damageTime);
+        yield return new WaitForSeconds(damageTime);
         _bodyArt.material.color = _normalColor;
     }
 
@@ -48,10 +48,10 @@ public class EnemyController : MonoBehaviour
         StartCoroutine(HealCoroutine(0.5f));
     }
 
-    IEnumerator HealCoroutine(float _damageTime)
+    IEnumerator HealCoroutine(float healTime)
     {
         _bodyArt.material.color = _healedColor;
-        yield return new WaitForSeconds(_damageTime);
+        yield return new WaitForSeconds(healTime);
         _bodyArt.material.color = _normalColor;
     }
 
@@ -60,11 +60,11 @@ public class EnemyController : MonoBehaviour
         StartCoroutine(DeadCoroutine(0.5f));
     }
 
-    IEnumerator DeadCoroutine(float _damageTime)
+    IEnumerator DeadCoroutine(float dieTime)
     {
         _bodyArt.gameObject.SetActive(false);
         Instantiate(_deathEffects, gameObject.transform.position, gameObject.transform.rotation);
-        yield return new WaitForSeconds(_damageTime);
+        yield return new WaitForSeconds(dieTime);
         Destroy(gameObject);
     }
 }
