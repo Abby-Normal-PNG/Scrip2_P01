@@ -9,6 +9,7 @@ public class PlayerCharacterAnimator : MonoBehaviour
     [SerializeField] ThirdPersonMovement _thirdPersonMovement = null;
     [SerializeField] AbilityCooldown _ability = null;
     [SerializeField] PlayerHealth _health = null;
+    [SerializeField] ParticleSystem _landParticle = null;
 
     const string IdleState = "Idle";
     const string RunState = "Run";
@@ -154,6 +155,7 @@ public class PlayerCharacterAnimator : MonoBehaviour
     IEnumerator LandCoroutine(float _landingTimeInSeconds)
     {
         _animator.CrossFadeInFixedTime(LandState, .1f);
+        _landParticle.Play();
         yield return new WaitForSeconds(_landingTimeInSeconds);
         _thirdPersonInput.RecheckRunSprintIdle();
         _animCoroutine = null;

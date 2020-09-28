@@ -24,12 +24,17 @@ public class EnemyHealth : MonoBehaviour, IDamageable<int>, IKillable, IHealable
         {
             Kill();
         }
+        else
+        {
+            TookDamage?.Invoke();
+        }
     }
 
     public void Heal(int _damageHealed)
     {
         _currentHealth += _damageHealed;
         CapHealth();
+        Healed?.Invoke();
     }
 
     void CapHealth()
@@ -42,6 +47,6 @@ public class EnemyHealth : MonoBehaviour, IDamageable<int>, IKillable, IHealable
 
     public void Kill()
     {
-        Destroy(gameObject);
+        Died?.Invoke();
     }
 }

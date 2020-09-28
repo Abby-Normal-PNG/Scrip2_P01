@@ -16,7 +16,7 @@ MonoBehaviour:
   _abilitySprite: {fileID: 21300000, guid: 7124fc120b8189749be952c40605e19e, type: 3}
   _abilityClip: {fileID: 8300000, guid: fcd6ab4ed4080e146a874173490cf203, type: 3}
   _abilityBaseCooldown: 2
-  _meleeDamage: 3
+  _meleeDamage: 2
   _meleeRange: 10
   _hitForce: 800
   _successEffects: {fileID: 4336449873102870839, guid: 3657d821604ac0e49b93d314246ed73f, type: 3}
