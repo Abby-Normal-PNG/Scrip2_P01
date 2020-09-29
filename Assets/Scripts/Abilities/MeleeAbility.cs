@@ -20,9 +20,7 @@ public class MeleeAbility : Ability
     {
         _meleeTrigger = obj.GetComponent<MeleeTriggerable>();
 
-        _meleeTrigger._meleeDamage = _meleeDamage;
-        _meleeTrigger._meleeRange = _meleeRange;
-        _meleeTrigger._hitForce = _hitForce;
+        SetTriggerableStats();
         _meleeTrigger._meleeOrigin = obj.transform;
 
         _meleeTrigger._hitEffects = _successEffects;
@@ -31,8 +29,16 @@ public class MeleeAbility : Ability
         _meleeTrigger.Initialize();
     }
 
+    private void SetTriggerableStats()
+    {
+        _meleeTrigger._meleeDamage = _meleeDamage;
+        _meleeTrigger._meleeRange = _meleeRange;
+        _meleeTrigger._hitForce = _hitForce;
+    }
+
     public override void TriggerAbility()
     {
+        SetTriggerableStats();
         _meleeTrigger.MeleeAttack();
     }
 }

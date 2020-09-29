@@ -15,6 +15,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable<int>, IKillable, IHealable
     public void Damage(int damageTaken)
     {
         _currentHealth -= damageTaken;
+        Debug.Log(gameObject.name + " took " + damageTaken + " damage");
         CheckDeath();
     }
 

@@ -144,7 +144,7 @@ public class PlayerCharacterAnimator : MonoBehaviour
         if(_isDamagedOrDying == false)
         {
             CancelCoroutines();
-            _animCoroutine = StartCoroutine(DamageCoroutine(1f));
+            _animCoroutine = StartCoroutine(DamageCoroutine(.8f));
             _stepAudio.Stop();
         }
     }
@@ -199,6 +199,7 @@ public class PlayerCharacterAnimator : MonoBehaviour
         _animator.CrossFadeInFixedTime(DamageState, .1f);
         AudioHelper.PlayClip2D(_hurtClip, 1f);
         yield return new WaitForSeconds(damagetimeInSeconds);
+        _isDamagedOrDying = false;
         _thirdPersonInput.RecheckRunSprintIdle();
         _animCoroutine = null;
         _isDamagedOrDying = false;
