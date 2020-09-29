@@ -8,17 +8,14 @@ public class MeleeTriggerable : MonoBehaviour
     [HideInInspector] public float _meleeRange = 50f;
     [HideInInspector] public float _hitForce = 100f;
     [HideInInspector] public Transform _meleeOrigin;
-
-    [HideInInspector] public ParticleSystem _particle;
-    [HideInInspector] public AudioSource _audio;
+    [HideInInspector] public GameObject _hitEffects;
     [HideInInspector] public AudioClip _successClip;
-    [HideInInspector] public WaitForSeconds _hitEffectTime;
 
     private Coroutine _coroutine;
 
     public void Initialize()
     {
-        _audio.clip = _successClip;
+        
     }
 
     public void MeleeAttack()
@@ -28,7 +25,7 @@ public class MeleeTriggerable : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(castOrigin, _meleeOrigin.transform.forward, out hit, _meleeRange))
         {
-            _coroutine = StartCoroutine(MeleeHitEffect(hit));
+            MeleeHitEffect(hit);
             IDamageable<int> hitHealth = hit.collider.gameObject.GetComponent<IDamageable<int>>();
             if (hitHealth != null)
             {
@@ -41,12 +38,9 @@ public class MeleeTriggerable : MonoBehaviour
         }
     }
 
-    private IEnumerator MeleeHitEffect(RaycastHit hit)
+    private void MeleeHitEffect(RaycastHit hit)
     {
         AudioHelper.PlayClip2D(_successClip, 1f);
-        _particle.gameObject.transform.position = hit.point;
-        _particle.Play();
-        yield return _hitEffectTime;
-        _particle.Stop();
+        Instantiate(_hitEffects, hit.point, Quaternion.identity);
     }
 }

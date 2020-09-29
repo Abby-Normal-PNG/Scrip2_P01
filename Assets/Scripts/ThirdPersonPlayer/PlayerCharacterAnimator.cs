@@ -14,6 +14,8 @@ public class PlayerCharacterAnimator : MonoBehaviour
     [Header("Feedback")] 
     [SerializeField] ParticleSystem _landParticle = null;
     [SerializeField] AudioClip _hurtClip = null;
+    [SerializeField] AudioClip _jumpClip = null;
+    [SerializeField] AudioSource _stepAudio = null;
 
     const string IdleState = "Idle";
     const string RunState = "Run";
@@ -73,6 +75,7 @@ public class PlayerCharacterAnimator : MonoBehaviour
         {
             _animator.CrossFadeInFixedTime(IdleState, .2f);
         }
+        _stepAudio.Stop();
     }
 
     private void OnStartRunning()
@@ -80,6 +83,7 @@ public class PlayerCharacterAnimator : MonoBehaviour
         if (_isDamagedOrDying == false)
         {
             _animator.CrossFadeInFixedTime(RunState, .2f);
+            _stepAudio.Play();
         }
     }
 
@@ -87,7 +91,9 @@ public class PlayerCharacterAnimator : MonoBehaviour
     {
         if (_isDamagedOrDying == false)
         {
+            _landParticle.Play();
             _animator.CrossFadeInFixedTime(SprintState, .2f);
+            _stepAudio.Play();
         }
     }
 
@@ -98,6 +104,7 @@ public class PlayerCharacterAnimator : MonoBehaviour
             CancelCoroutines();
             _animCoroutine = StartCoroutine(JumpCoroutine(.5f));
         }
+        _stepAudio.Stop();
     }
 
     private void OnFell()
@@ -106,6 +113,7 @@ public class PlayerCharacterAnimator : MonoBehaviour
         {
             _animator.CrossFadeInFixedTime(FallState, .2f);
         }
+        _stepAudio.Stop();
     }
 
     private void OnLanded()
@@ -124,6 +132,11 @@ public class PlayerCharacterAnimator : MonoBehaviour
             CancelCoroutines();
             _animCoroutine = StartCoroutine(AbilityCoroutine(0.6f));
         }
+        if(_thirdPersonMovement._superJumped == true)
+        {
+            _thirdPersonMovement._superJumped = false;
+            _stepAudio.Stop();
+        }
     }
 
     private void OnTookDamage()
@@ -132,6 +145,7 @@ public class PlayerCharacterAnimator : MonoBehaviour
         {
             CancelCoroutines();
             _animCoroutine = StartCoroutine(DamageCoroutine(1f));
+            _stepAudio.Stop();
         }
     }
 
@@ -141,6 +155,7 @@ public class PlayerCharacterAnimator : MonoBehaviour
         _isDamagedOrDying = true;
         _animator.CrossFadeInFixedTime(DeadState, .2f);
         AudioHelper.PlayClip2D(_hurtClip, 1f);
+        _stepAudio.Stop();
     }
 
     private void CancelCoroutines()
@@ -154,6 +169,8 @@ public class PlayerCharacterAnimator : MonoBehaviour
     IEnumerator JumpCoroutine(float jumpingTimeInSeconds)
     {
         _animator.CrossFadeInFixedTime(LandState, .1f);
+        AudioHelper.PlayClip2D(_jumpClip, 1f);
+        _landParticle.Play();
         yield return new WaitForSeconds(jumpingTimeInSeconds);
         OnFell();
         _animCoroutine = null;

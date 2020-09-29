@@ -16,7 +16,6 @@ public class AbilityCooldown : MonoBehaviour
     public Text _coolDownText;
 
     private Image _buttonImage;
-    private AudioSource _abilityAudio;
     private float _cooldownDuration;
     private float _nextReadyTime;
     private float _cooldownTimeLeft;
@@ -30,7 +29,6 @@ public class AbilityCooldown : MonoBehaviour
     {
         _ability = selectedAbility;
         _buttonImage = GetComponent<Image>();
-        _abilityAudio = GetComponent<AudioSource>();
         _buttonImage.sprite = _ability._abilitySprite;
         _darkMask.sprite = _ability._abilitySprite;
         _cooldownDuration = _ability._abilityBaseCooldown;
@@ -75,8 +73,7 @@ public class AbilityCooldown : MonoBehaviour
         _darkMask.enabled = true;
         _coolDownText.enabled = true;
 
-        _abilityAudio.clip = _ability._abilityClip;
-        _abilityAudio.Play();
+        AudioHelper.PlayClip2D(_ability._abilityClip, 1f);
         _ability.TriggerAbility();
         AbilityActivated?.Invoke();
     }

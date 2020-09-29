@@ -19,6 +19,5 @@ MonoBehaviour:
   _meleeDamage: 2
   _meleeRange: 10
   _hitForce: 400
-  _successEffects: {fileID: 4336449873102870839, guid: 3657d821604ac0e49b93d314246ed73f, type: 3}
+  _successEffects: {fileID: 2681587809212414878, guid: 3657d821604ac0e49b93d314246ed73f, type: 3}
   _successClip: {fileID: 8300000, guid: 2ffa7cb24e929164993cda947457f3dc, type: 3}
-  _hitEffectTimeSecs: 0.5
