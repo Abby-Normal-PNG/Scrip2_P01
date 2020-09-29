@@ -16,5 +16,5 @@ MonoBehaviour:
   _abilitySprite: {fileID: 21300000, guid: 8920a631c5dfd1c4ca9c6e48f53b17f5, type: 3}
   _abilityClip: {fileID: 8300000, guid: a4955f8d79835474f8e7ebb62bbc5686, type: 3}
   _abilityBaseCooldown: 3
-  _jumpSpeed: 45
+  _jumpSpeed: 35
   _jumpEffects: {fileID: 1329372252915950955, guid: 96a56a2e2cf2ddc44b9f2d8dc4c1b42e, type: 3}

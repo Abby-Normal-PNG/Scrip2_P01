@@ -1826,7 +1826,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 684315348}
-  m_LocalRotation: {x: 0.17615646, y: -0.015978279, z: 0.0028597803, w: 0.9842284}
+  m_LocalRotation: {x: 0.17615646, y: -0.015978323, z: 0.0028597885, w: 0.9842284}
   m_LocalPosition: {x: 0.36488435, y: 8.746078, z: -39.23507}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -2383,9 +2383,9 @@ MonoBehaviour:
   _groundDetector: {fileID: 534601086}
   _playerUI: {fileID: 1108444811}
   _turnSmoothTime: 0.1
-  _moveSpeed: 28.75
+  _moveSpeed: 24.75
   _sprintSpeed: 50.31
-  _jumpSpeed: 30
+  _jumpSpeed: 28.75
   _gravity: 1
   _vertSpeedCap: 60
   _inclineTolerance: 1
@@ -4226,7 +4226,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1708085697}
-  m_LocalRotation: {x: 0.17042433, y: -0.01599467, z: 0.002766726, w: 0.98523706}
+  m_LocalRotation: {x: 0.17042433, y: -0.015994703, z: 0.0027667321, w: 0.98523706}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:

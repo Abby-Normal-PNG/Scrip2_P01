@@ -17,12 +17,13 @@ public class AbilityCooldown : MonoBehaviour
 
     private Image _buttonImage;
     private float _cooldownDuration;
-    private float _nextReadyTime;
-    private float _cooldownTimeLeft;
+    [HideInInspector] public float _nextReadyTime;
+    [HideInInspector] public float _cooldownTimeLeft;
 
     private void Start()
     {
         Initialize(_ability, _weaponHolder);
+        SetCooldown();
     }
 
     public void Initialize(Ability selectedAbility, GameObject weaponHolder)
@@ -68,13 +69,18 @@ public class AbilityCooldown : MonoBehaviour
 
     private void ButtonTriggered()
     {
-        _nextReadyTime = _cooldownDuration + Time.time;
-        _cooldownTimeLeft = _cooldownDuration;
-        _darkMask.enabled = true;
-        _coolDownText.enabled = true;
+        SetCooldown();
 
         AudioHelper.PlayClip2D(_ability._abilityClip, 1f);
         _ability.TriggerAbility();
         AbilityActivated?.Invoke();
+    }
+
+    public void SetCooldown()
+    {
+        _nextReadyTime = _cooldownDuration + Time.time;
+        _cooldownTimeLeft = _cooldownDuration;
+        _darkMask.enabled = true;
+        _coolDownText.enabled = true;
     }
 }
