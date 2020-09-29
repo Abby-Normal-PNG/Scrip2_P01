@@ -21,10 +21,13 @@ public class PlayerHealth : MonoBehaviour, IHealable<int>, IDamageable<int>, IKi
     [SerializeField] CanvasGroup _damageCG;
     [SerializeField] float _damageFlashTime = 0.5f;
     [SerializeField] float _damageInvulnTime = 0.5f;
+    [Header("Heal")]
+    [SerializeField] CanvasGroup _healCG;
+    [SerializeField] float _healFlashTime = 0.5f;
 
     private ThirdPersonInput _input;
     private ThirdPersonMovement _movement;
-    private Coroutine _damageCoroutine;
+    private Coroutine _coroutine;
     private float _damageInvulnTimeLeft;
     private bool _isDamageable;
 
@@ -81,7 +84,7 @@ public class PlayerHealth : MonoBehaviour, IHealable<int>, IDamageable<int>, IKi
     private void DamageEffects()
     {
         UpdateHPSlider();
-        _damageCoroutine = StartCoroutine(DamageCoroutine(_damageFlashTime));
+        _coroutine = StartCoroutine(DamageCoroutine(_damageFlashTime));
     }
 
     void CheckDeath()
@@ -95,8 +98,13 @@ public class PlayerHealth : MonoBehaviour, IHealable<int>, IDamageable<int>, IKi
     public void Heal(int _damageHealed)
     {
         _currentHealth += _damageHealed;
-        UpdateHPSlider();
+        HealEffects();
         CapHealth();
+    }
+    private void HealEffects()
+    {
+        UpdateHPSlider();
+        _coroutine = StartCoroutine(HealCoroutine(_healFlashTime));
     }
 
     void CapHealth()
@@ -119,5 +127,11 @@ public class PlayerHealth : MonoBehaviour, IHealable<int>, IDamageable<int>, IKi
         _damageCG.alpha = 1;
         yield return new WaitForSeconds(_duration);
         _damageCG.alpha = 0;
+    }
+    IEnumerator HealCoroutine(float _duration)
+    {
+        _healCG.alpha = 1;
+        yield return new WaitForSeconds(_duration);
+        _healCG.alpha = 0;
     }
 }
